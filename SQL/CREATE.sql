@@ -1,0 +1,70 @@
+USE PRACTICE;
+
+CREATE TABLE EMPLOYEE (
+    EMP_ID INT AUTO_INCREMENT PRIMARY KEY,
+    EMP_NAME VARCHAR(50) NOT NULL,
+    EMP_ROLE VARCHAR(50),
+    SALARY DECIMAL NOT NULL,
+    JOIN_DATE DATE NOT NULL,
+    END_DATE DATE,
+    INDEX idx_employee_name (EMP_NAME),
+    INDEX idx_employee_role (EMP_ROLE),
+    INDEX idx_employee_salary (SALARY),
+    INDEX idx_employee_join_date (JOIN_DATE)
+);
+
+CREATE TABLE PROJECTS (
+    PROJECT_ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    PROJECT_NAME VARCHAR(50) NOT NULL,
+    PROJECT_DESCRIPTION VARCHAR(150) NOT NULL,
+    CLIENT_NAME VARCHAR(50) NOT NULL,
+    PROJECT_BUDGET DECIMAL,
+    p_STATUS VARCHAR(20) DEFAULT "ONGOING" NOT NULL,
+    START_DATE DATE NOT NULL,
+    END_DATE DATE,
+
+     INDEX idx_project_name (PROJECT_NAME),
+    INDEX idx_client_name (CLIENT_NAME)
+);
+
+CREATE TABLE TASK (
+    TASK_ID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    TASK_DESCRIPTION VARCHAR(500) NOT NULL,
+    PROJECT_ID INT NOT NULL ,
+    EMP_ID  INT NOT NULL ,
+    TASK_STATUS VARCHAR(20) DEFAULT("ONGOING") NOT NULL,
+
+    CONSTRAINT PID 
+    Foreign Key (PROJECT_ID) 
+    REFERENCES PROJECTS(PROJECT_ID),
+
+    CONSTRAINT EMPID
+    FOREIGN KEY(EMP_ID)
+    REFERENCES EMPLOYEE(EMP_ID),
+
+    INDEX index_task_status (TASK_STATUS)
+);
+
+INSERT INTO employee (EMP_NAME, EMP_ROLE, SALARY, JOIN_DATE)VALUES("PAVAN WAKADE",  "DEVELOPER", 1000000, CURRENT_DATE),("SONALI PATIL", "DEVELOPER",  1500000, CURRENT_DATE),("AMIT SHARMA",  "TESTER", 650000, '2023-06-15'),("NEHA KULKARNI","HR",550000, '2022-03-10'),("ROHIT VERMA",  "PROJECT MANAGER",   1800000, '2021-11-01'),("SNEHA JOSHI",  "BUSINESS ANALYST",   900000, '2024-01-20'),("VIKAS RAO",    "DEVOPS ENGINEER",   1200000, '2020-08-05');
+
+INSERT INTO PROJECTS(PROJECT_NAME, PROJECT_DESCRIPTION, CLIENT_NAME, PROJECT_BUDGET, p_STATUS, START_DATE, END_DATE)VALUES('HR Management System','Web application for managing employee records and payroll','ABC Corporation',2500000,'ONGOING','2024-01-10',NULL),('E-Commerce Platform','Online shopping platform with payment gateway integration','XYZ Pvt Ltd',4500000,'COMPLETED','2023-02-01','2024-02-28');
+
+INSERT INTO TASK (TASK_DESCRIPTION, PROJECT_ID, EMP_ID, TASK_STATUS)VALUES('Frontend UI development', 2, 2, 'ONGOING'),('Bug fixing and testing',  1, 2, 'ON_HOLD'),('Test case preparation',  1, 3, 'COMPLETED'),('Regression testing',     2, 3, 'ON_HOLD'),('Employee onboarding',    1, 4, 'COMPLETED'),('Payroll validation',     1, 4, 'ONGOING'),('Project planning',       2, 5, 'COMPLETED'),('Sprint review meeting',  2, 5, 'COMPLETED'),('Requirement analysis',   1, 6, 'COMPLETED'),('Client documentation',   2, 6, 'ONGOING'),('CI/CD pipeline setup',   2, 7, 'ONGOING'),('Server monitoring',      2, 7, 'ONGOING');
+
+SELECT * FROM employee;
+
+SELECT * FROM projects;
+
+SELECT * FROM task;
+
+SELECT 
+    p.`CLIENT_NAME`,e.`EMP_NAME`,e.`SALARY`,t.`EMP_ID`,t.`TASK_STATUS`, t.`TASK_DESCRIPTION`
+FROM task t 
+JOIN employee e ON t.`EMP_ID` = e.`EMP_ID`
+JOIN projects p ON p.`PROJECT_ID` = t.`PROJECT_ID`
+ORDER BY e.`SALARY`;
+
+select * from employee where `EMP_ROLE`="DEVELOPER" ORDER BY `SALARY`;
+
+
+SELECT 
